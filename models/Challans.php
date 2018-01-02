@@ -11,11 +11,13 @@ use Yii;
  * @property integer $challan_number
  * @property integer $customer_id
  * @property double $amount
- * @property string $challan_date
  * @property string $description
  * @property integer $is_merged
  * @property integer $is_billed
+ * @property integer $status
  * @property string $billing_date
+ * @property string $challan_date
+ * @property string $modified_at
  */
 class Challans extends \yii\db\ActiveRecord
 {
@@ -34,9 +36,9 @@ class Challans extends \yii\db\ActiveRecord
     {
         return [
             [['challan_number', 'customer_id'], 'required'],
-            [['challan_number', 'customer_id', 'is_merged', 'is_billed'], 'integer'],
+            [['challan_number', 'customer_id', 'is_merged', 'is_billed', 'status'], 'integer'],
             [['amount'], 'number'],
-            [['challan_date', 'billing_date'], 'safe'],
+            [['billing_date', 'challan_date', 'modified_at'], 'safe'],
             [['description'], 'string', 'max' => 200],
         ];
     }
@@ -51,11 +53,13 @@ class Challans extends \yii\db\ActiveRecord
             'challan_number' => 'Challan Number',
             'customer_id' => 'Customer',
             'amount' => 'Amount',
-            'challan_date' => 'Challan Date',
             'description' => 'Description',
             'is_merged' => 'Is Merged',
             'is_billed' => 'Is Billed',
+            'status' => 'Status',
             'billing_date' => 'Billing Date',
+            'challan_date' => 'Challan Date',
+            'modified_at' => 'Modified At',
         ];
     }
 }

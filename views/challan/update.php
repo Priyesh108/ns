@@ -5,17 +5,31 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Challans */
 
-$this->title = 'Update Challans: ' . $model->c_id;
-$this->params['breadcrumbs'][] = ['label' => 'Challans', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->c_id, 'url' => ['view', 'id' => $model->c_id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Update Challan: ' . $model->challan_number;
 ?>
-<div class="challans-update">
+<section class="content-header">
+    <h1><?= Html::encode($this->title) ?>
+        <small>Update challan details</small>
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3>Challan Details</h3>
+                </div>
+                <div class="box-body" style="width: 450px">
+                    <?= $this->render('_form', [
+                        'model' => $model,
+                        'challanProducts' => $challanProducts,
+                        'newGroupId' => $newGroupId,
+                        'customers' => $customers,
+                        'products' => $products
+                    ]) ?>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>
