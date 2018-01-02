@@ -24,6 +24,7 @@ $this->title = 'Create Challan';
                     <?= $this->render('_form', [
                         'model' => $model,
                         'challanProducts' => $challanProducts,
+                        'newGroupId' => $newGroupId,
                         'customers' => $customers,
                         'products' => $products
                     ]) ?>

@@ -9,11 +9,11 @@ use Yii;
  *
  * @property integer $cp_id
  * @property integer $challan_number
- * @property integer $product_id
- * @property double $base_unit
- * @property double $mutiplier_unit
- * @property integer $group_id
+ * @property integer $group_number
+ * @property string $product_name
  * @property double $selling_price
+ *
+ * @property ProductUnitMaaping[] $productUnitMaapings
  */
 class ChallanProductMapping extends \yii\db\ActiveRecord
 {
@@ -31,9 +31,10 @@ class ChallanProductMapping extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['challan_number', 'product_id', 'base_unit', 'mutiplier_unit', 'group_id', 'selling_price'], 'required'],
-            [['challan_number', 'product_id', 'group_id'], 'integer'],
-            [['base_unit', 'mutiplier_unit', 'selling_price'], 'number'],
+            [['challan_number', 'selling_price'], 'required'],
+            [['challan_number', 'group_number'], 'integer'],
+            [['selling_price'], 'number'],
+            [['product_name'], 'string', 'max' => 50],
         ];
     }
 
@@ -45,11 +46,17 @@ class ChallanProductMapping extends \yii\db\ActiveRecord
         return [
             'cp_id' => 'Cp ID',
             'challan_number' => 'Challan Number',
-            'product_id' => 'Product',
-            'base_unit' => 'Base Unit',
-            'mutiplier_unit' => 'Mutiplier Unit',
-            'group_id' => 'Group ID',
+            'group_number' => 'Group Number',
+            'product_name' => 'Product Name',
             'selling_price' => 'Selling Price',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProductUnitMaapings()
+    {
+        return $this->hasMany(ProductUnitMaaping::className(), ['cp_id' => 'cp_id']);
     }
 }
