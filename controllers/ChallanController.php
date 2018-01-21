@@ -117,6 +117,8 @@ class ChallanController extends Controller
                 ->where('challan_number=:cn',[':cn'=>$challanNumber])
                 ->one();
 
+            $this->updateTotalUnits($challanNumber);
+
             $challan->customer_id = $customerId;
             $challan->description = $description;
             $challan->challan_date = $challanDate;
@@ -203,6 +205,8 @@ class ChallanController extends Controller
             $challan = Challans::find()
                 ->where('challan_number=:cn',[':cn'=>$challanNumber])
                 ->one();
+
+            $this->updateTotalUnits($challanNumber);
 
             $challan->customer_id = $customerId;
             $challan->description = $description;
@@ -362,7 +366,9 @@ class ChallanController extends Controller
         $challan_number = $_POST['challan_number'];
         $group_number = $_POST['group_number'];
 
-        $challan_product = ChallanProductMapping::find()->where(['challan_number'=>$challan_number,'group_number'=>$group_number])->one();
+        $challan_product = ChallanProductMapping::find()
+            ->where(['challan_number'=>$challan_number,'group_number'=>$group_number])
+            ->one();
 
         //Remove all data and save it again
         ProductUnitMapping::deleteAll(['cp_id'=>$challan_product->cp_id]);
@@ -463,5 +469,34 @@ class ChallanController extends Controller
             $finalAmount = ($finalAmount) + ($totalUnits['total_units'] * $product->selling_price);
         }
         return $finalAmount;
+    }
+
+    //Update Total Units in ChallanProductMapping
+    public function updateTotalUnits($challan_number){
+
+        Yii::$app->getDb()
+            ->createCommand('update product_unit_mapping pum, challan_product_mapping cpm, challans c 
+                                  set pum.total_units = base_unit * multiplier_unit where pum.cp_id = cpm.cp_id and 
+                                  cpm.challan_number ='. $challan_number)
+            ->execute();
+
+        $challan_products = ChallanProductMapping::find()
+            ->where('challan_number=:cn',[':cn'=>$challan_number])
+            ->all();
+
+        foreach ($challan_products as $group){
+            $total = 0;
+            $product_group = ProductUnitMapping::find()
+                ->where('cp_id=:cpId',[':cpId'=>$group->cp_id])
+                ->all();
+
+            foreach ($product_group as $record){
+                $total += $record->total_units;
+            }
+
+            $group->total_units = $total;
+            $group->amount = $total * $group->selling_price;
+            $group->update(false);
+        }
     }
 }

@@ -8,7 +8,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Challans */
 
-$this->title = $model->challan_number;
+$this->title = "Challan Number: ".$model->challan_number;
 ?>
 <section class="content">
     <div class="row">
@@ -19,7 +19,7 @@ $this->title = $model->challan_number;
                         <div class="col-xs-3">
                             <h3>Challan Details</h3>
                         </div>
-                        <div class="col-xs-2 col-xs-offset-6" style="margin-top: 15px">
+                        <div class="col-xs-2 col-xs-offset-5" style="margin-top: 15px">
                             <?= Html::a('Update', ['update', 'id' => $model->c_id], ['class' => 'btn btn-primary']) ?>
                             <?= Html::a('Delete', ['delete', 'id' => $model->c_id], [
                                 'class' => 'btn btn-danger',
@@ -28,6 +28,9 @@ $this->title = $model->challan_number;
                                     'method' => 'post',
                                 ],
                             ]) ?>
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button" style="margin-right: 30px;margin-top: 15px;" class="btn btn-success pull-right" onclick="createBill()">Create Bill</button>
                         </div>
                     </div>
                 </div>
@@ -104,3 +107,30 @@ $this->title = $model->challan_number;
         <?php } ?>
     </div>
 </section>
+<script src="<?php echo Yii::getAlias('@web') ?>/js/jquery.min.js"></script>
+<script>
+    var challan = '<?= $model->challan_number; ?>';
+    var challanStatus = '<?= Yii::$app->servicehelper->getChallanState($model->challan_number); ?>';
+    function createBill() {
+        if(challanStatus == 2){
+            alert("Challan is already clubbed with other Challans. Separate bill can not be prepared.");
+        } else if(challanStatus == 3){
+            alert("Bill is already prepared for this challan.");
+        } else {
+            if(challanStatus == 1){
+                var createBillUrl = '<?= Yii::$app->urlManager->createUrl(['bill/create-challan-specific-bill']); ?>';
+                $.ajax({
+                    type: "POST",
+                    url: createBillUrl,
+                    data: {
+                        challan_number: challan
+                    },
+                    success: function (data) {
+                        alert("Bill was created successfully.");
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+    }
+</script>

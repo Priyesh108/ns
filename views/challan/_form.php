@@ -275,7 +275,6 @@ use yii\widgets\ActiveForm;
             $(this).parents('.add-more-fields:first').remove();
         } else {*/
             var btnId = $(this).attr('id');
-            console.log(btnId);
             var res = btnId.split('_');
             var ch_num = res[1];
             var grp_num = res[2];
@@ -440,7 +439,6 @@ use yii\widgets\ActiveForm;
             total_units.push(total_units_value);
             //if (this.value != "") total_units.push(this.value);
         });
-        //console.log(total_units);
         if(base_unit.length == mul_unit.length){
             $.ajax({
                 url: url,
@@ -464,5 +462,5 @@ use yii\widgets\ActiveForm;
         $('[name="productUnitMapping[base_unit]"]').last().removeAttr('id');
         $('[name="productUnitMapping[multiplier_unit]"]').last().removeAttr('id');
         $('[name="productUnitMapping[total_units]"]').last().removeAttr('id');
-    })
+    });
 </script>
