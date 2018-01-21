@@ -260,6 +260,11 @@ AppAsset::register($this);
                         <i class="fa fa-dashboard"></i> <span>Challans</span>
                     </a>
                 </li>
+                <li>
+                    <a href="<?php echo Yii::$app->urlManager->createUrl(['bill/index']) ?>">
+                        <i class="fa fa-dashboard"></i> <span>Bills</span>
+                    </a>
+                </li>
             </ul>
         </section>
         <!-- /.sidebar -->

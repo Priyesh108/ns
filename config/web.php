@@ -15,6 +15,11 @@ $config = [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'servicehelper' => [
+
+            'class' => 'app\components\ServiceHelper',
+
+        ],
         'user' => [
             'identityClass' => 'app\models\Users',
             'enableAutoLogin' => true,

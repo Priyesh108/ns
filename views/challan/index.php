@@ -32,7 +32,11 @@ $this->title = 'Challans';
             ],
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
-
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header'=>'Action',
+                    'contentOptions' => ['style' => 'min-width:70px;'],
+                ],
                 'challan_number',
                 'customer_id',
                 'amount',
@@ -41,8 +45,6 @@ $this->title = 'Challans';
                 'is_merged',
                 'is_billed',
                 'billing_date',
-
-                ['class' => 'yii\grid\ActionColumn'],
             ],
         ]); ?>
     </div>
