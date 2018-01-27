@@ -34,7 +34,16 @@ $this->title = 'Products';
                 'product_id',
                 'name',
                 'description',
-//                'base_price',
+                'base_price',
+                [
+                    'header' => 'Unit',
+                    'value' => function($data){
+                        if($data->unit == 1)
+                            return "Meters";
+                        else
+                            return "Pieces";
+                    }
+                ],
 //                [
 //                    'attribute' =>  'modified_at',
 //                    'format' => ['date', 'medium']

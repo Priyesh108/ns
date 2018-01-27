@@ -42,7 +42,25 @@ $this->title = $model->name;
                             'name',
                             'description',
                             'base_price',
-                            'is_active',
+                            [
+                                'attribute' => 'is_active',
+                                'label' => 'Status',
+                                'value' => function($data){
+                                    if($data->is_active == 1)
+                                        return "Active";
+                                    else
+                                        return "Inactive";
+                                }
+                            ],
+                            [
+                                'attribute' => 'unit',
+                                'value' => function($data){
+                                    if($data->unit == 1)
+                                        return "Meters";
+                                    else
+                                        return "Pieces";
+                                }
+                            ],
                             [
                                 'attribute' => 'created_at',
                                 'format' => ['date', 'medium']

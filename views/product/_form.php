@@ -18,6 +18,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'base_price')->textInput(['placeholder' => "Base selling price"]) ?>
 
+    <?= $form->field($model, 'unit')->dropDownList(['1'=>"Meters",'2'=>'Pieces']); ?>
+
     <?= $form->field($model, 'is_active')->dropDownList(['1'=>"Active",'2'=>'Inactive']) ?>
 
     <div class="form-group">

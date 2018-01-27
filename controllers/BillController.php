@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\BillChallanMapping;
+use app\models\ChallanProductMapping;
 use app\models\Challans;
 use app\models\Customers;
 use app\models\TaxMapping;
@@ -144,8 +145,28 @@ class BillController extends Controller
      */
     public function actionView($id)
     {
+        $bill = $this->findModel($id);
+        $challans = BillChallanMapping::find()
+            ->select('challan_number')
+            ->where('bill_no=:b_no',[':b_no'=>$bill->bill_no])
+            ->column();
+
+        $challan_numbers = array();
+        foreach ($challans as $i=>$challan){
+            array_push($challan_numbers,$challan);
+
+        }
+
+        $productGroups = (new Yii\db\Query())
+            ->select('*')
+            ->from('challan_product_mapping')
+            ->where(['in','challan_number',$challan_numbers])
+            ->all();
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $bill,
+            'productGroups' => $productGroups,
+            'challan_numbers' => $challan_numbers
         ]);
     }
 
@@ -176,12 +197,32 @@ class BillController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $customer = Customers::find()
+            ->where('name=:nm',[':nm'=>$model->company_name])
+            ->one();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $netTotal = $model->net_total;
+            if(isset($model->parcel_packing))
+                $netTotal += $model->parcel_packing;
+            if(isset($model->extra_charges))
+                $netTotal += $model->extra_charges;
+            if(isset($model->discount))
+                $netTotal -= $model->discount;
+            $model->net_total = $netTotal;
+            $model->billing_date = date('Y-m-d H:i:s', strtotime($model->billing_date));
+            if($model->save())
+                return $this->redirect(['view', 'id' => $model->id]);
+            else {
+                return $this->render('update', [
+                    'model' => $model,
+                    'customer' => $customer
+                ]);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'customer' => $customer
             ]);
         }
     }
@@ -247,6 +288,41 @@ class BillController extends Controller
         $challan->billing_date = date('Y-m-d H:i:s');
         $challan->modified_at = date('Y-m-d H:i:s');
         $challan->update();
+    }
+
+    //Pay the Bill
+    public function actionBillPaid(){
+        $bill_id = $_POST['bill_id'];
+        $received_amount = $_POST['received_amount'];
+        $discount = $_POST['discount'];
+        $description = $_POST['description'];
+        $payment_date = date('Y-m-d H:i:s', strtotime($_POST['payment_date']));
+
+
+        $bill = Bill::findOne($bill_id);
+        $bill->received_amount = $received_amount;
+        $bill->discount = $discount;
+        $bill->description = $description;
+        $bill->is_paid = 1;
+        $bill->payment_date = $payment_date;
+        if($bill->update())
+            print("Success");
+        else
+            print("Failure");
+    }
+
+    //Get Bill details
+    public function actionGetDetails(){
+        $bill_id = $_GET['id'];
+        $bill = Bill::findOne($bill_id);
+        $res = array();
+        $res['net_total'] = $bill->net_total;
+        $res['discount'] = $bill->discount;
+        $res['description'] = $bill->description;
+        $res['billing_date'] = date('d-M-Y', strtotime($bill->billing_date));
+        $res['received_amount'] = $bill->received_amount;
+        $res['payment_date'] = $bill->payment_date;
+        echo json_encode($res);
     }
 
     //Create a pending order

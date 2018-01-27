@@ -11,6 +11,7 @@ use Yii;
  * @property string $name
  * @property string $description
  * @property double $base_price
+ * @property integer $unit
  * @property integer $is_active
  * @property string $created_at
  * @property string $modified_at
@@ -33,7 +34,7 @@ class Products extends \yii\db\ActiveRecord
         return [
             [['name', 'base_price'], 'required'],
             [['base_price'], 'number'],
-            [['is_active'], 'integer'],
+            [['unit', 'is_active'], 'integer'],
             [['created_at', 'modified_at'], 'safe'],
             [['name'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 100],
@@ -50,6 +51,7 @@ class Products extends \yii\db\ActiveRecord
             'name' => 'Name',
             'description' => 'Description',
             'base_price' => 'Base Price',
+            'unit' => 'Unit',
             'is_active' => 'Is Active',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
