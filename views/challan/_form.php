@@ -9,6 +9,7 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 <style>
+    /*This style is required for box display*/
     .box-body{
         width: 100% !important;
     }

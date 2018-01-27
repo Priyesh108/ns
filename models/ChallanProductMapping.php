@@ -11,6 +11,7 @@ use Yii;
  * @property integer $challan_number
  * @property integer $group_number
  * @property string $product_name
+ * @property integer $unit
  * @property double $selling_price
  * @property double $total_units
  * @property double $amount
@@ -35,7 +36,7 @@ class ChallanProductMapping extends \yii\db\ActiveRecord
     {
         return [
             [['challan_number', 'selling_price'], 'required'],
-            [['challan_number', 'group_number'], 'integer'],
+            [['challan_number', 'group_number', 'unit'], 'integer'],
             [['selling_price', 'total_units', 'amount'], 'number'],
             [['product_name'], 'string', 'max' => 50],
             [['challan_number'], 'exist', 'skipOnError' => true, 'targetClass' => Challans::className(), 'targetAttribute' => ['challan_number' => 'challan_number']],
@@ -52,6 +53,7 @@ class ChallanProductMapping extends \yii\db\ActiveRecord
             'challan_number' => 'Challan Number',
             'group_number' => 'Group Number',
             'product_name' => 'Product Name',
+            'unit' => 'Unit',
             'selling_price' => 'Selling Price',
             'total_units' => 'Total Units',
             'amount' => 'Amount',

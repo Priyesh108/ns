@@ -36,4 +36,16 @@ class ServiceHelper extends Component{
             ->one();
         return $challan->status;
     }
+
+    /*
+     * Get Product Units
+     * 1 -> Meters
+     * 2 -> Pieces
+     * */
+    public function getProductUnit($id){
+        if($id == 1)
+            return "Meters";
+        else
+            return "Pieces";
+    }
 }

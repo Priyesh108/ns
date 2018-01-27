@@ -15,6 +15,8 @@ use Yii;
  * @property string $building
  * @property string $market
  * @property string $city
+ * @property string $state
+ * @property string $country
  * @property string $mobile_number
  * @property string $gst_number
  * @property double $order_total
@@ -54,7 +56,7 @@ class Bill extends \yii\db\ActiveRecord
             [['order_total', 'CGST', 'IGST', 'SGST', 'parcel_packing', 'extra_charges', 'discount', 'net_total', 'received_amount'], 'number'],
             [['billing_date', 'payment_date', 'created_at', 'modified_at'], 'safe'],
             [['is_paid'], 'required'],
-            [['company_name', 'owner_name', 'building', 'market', 'city', 'mobile_number', 'gst_number'], 'string', 'max' => 50],
+            [['company_name', 'owner_name', 'building', 'market', 'city', 'state', 'country', 'mobile_number', 'gst_number'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 100],
         ];
     }
@@ -73,6 +75,8 @@ class Bill extends \yii\db\ActiveRecord
             'building' => 'Building',
             'market' => 'Market',
             'city' => 'City',
+            'state' => 'State',
+            'country' => 'Country',
             'mobile_number' => 'Mobile Number',
             'gst_number' => 'Gst Number',
             'order_total' => 'Order Total',
