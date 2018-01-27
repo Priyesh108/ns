@@ -256,6 +256,11 @@ AppAsset::register($this);
                     </a>
                 </li>
                 <li>
+                    <a href="<?php echo Yii::$app->urlManager->createUrl(['price/index']) ?>">
+                        <i class="fa fa-dashboard"></i> <span>Price</span>
+                    </a>
+                </li>
+                <li>
                     <a href="<?php echo Yii::$app->urlManager->createUrl(['challan/index']) ?>">
                         <i class="fa fa-dashboard"></i> <span>Challans</span>
                     </a>

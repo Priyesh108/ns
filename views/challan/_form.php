@@ -375,9 +375,7 @@ use yii\widgets\ActiveForm;
                     $('#modal-fields').find('.modal-existing-fields').remove();
                     $('#modal-fields').find('.modal-add-more-fields').not(':last').remove();
                     $(data).insertBefore('.modal-add-more-fields');
-                    //console.log(data);
                     var c = $('.modal-existing-fields').size();
-                    //console.log(c);
                     //Add id to the last row which is used for addition
                     $('[name="productUnitMapping[base_unit]"]').last().attr('id',"base_unit_"+(parseInt(c) + 1));
                     $('[name="productUnitMapping[multiplier_unit]"]').last().attr('id',"multiplier_unit_"+(parseInt(c) + 1));
@@ -464,4 +462,33 @@ use yii\widgets\ActiveForm;
         $('[name="productUnitMapping[multiplier_unit]"]').last().removeAttr('id');
         $('[name="productUnitMapping[total_units]"]').last().removeAttr('id');
     });
+
+    //Get Selling Price
+    $('.dropBtn').change(function () {
+        var customer_id = $('#challans-customer_id option:selected').val();
+        if(customer_id == ""){
+            alert("Please select customer");
+            $(this).find('option:first').attr('selected', 'selected');
+        }
+        var val = this.value;
+        var id = $(this).attr('id');
+        var res = id.split('_');
+        var base_id = res[2];
+        var price = '';
+        var url = '<?= Yii::$app->urlManager->createUrl('price/get-price'); ?>';
+        if(val != ''){
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {
+                    customer_id: customer_id,
+                    product_id: val
+                },
+                success:function (data) {
+                    price = data;
+                    $('#selling_price_'+base_id).val(price);
+                }
+            });
+        }
+    })
 </script>

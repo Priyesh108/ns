@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\ChallanProductMapping;
 use app\models\Customers;
+use app\models\Price;
 use app\models\Products;
 use app\models\ProductUnitMapping;
 use Yii;
@@ -126,6 +127,8 @@ class ChallanController extends Controller
             $challan->amount = $this->getTotalAmount($challanNumber);
             $challan->update(false);
 
+            $this->updatePriceDetails($challanNumber);
+
             return $this->redirect(['view', 'id' => $challan->c_id]);
         } else {
             //Delete all Pending challans
@@ -214,6 +217,8 @@ class ChallanController extends Controller
             $challan->status = 1;
             $challan->amount = $this->getTotalAmount($challanNumber);
             $challan->update(false);
+
+            $this->updatePriceDetails($challanNumber);
 
             return $this->redirect(['view', 'id' => $model->c_id]);
         } else {
@@ -497,6 +502,49 @@ class ChallanController extends Controller
             $group->total_units = $total;
             $group->amount = $total * $group->selling_price;
             $group->update(false);
+        }
+    }
+
+    //Update price in the mapping
+    public function updatePriceDetails($challan_number){
+        $challan = Challans::find()
+            ->where('challan_number=:cn',[':cn'=>$challan_number])
+            ->one();
+
+        $customer = Customers::findOne($challan->customer_id);
+
+        $challanProducts = ChallanProductMapping::find()
+            ->where('challan_number=:cn',[':cn'=>$challan_number])
+            ->all();
+
+        foreach ($challanProducts as $record){
+            $product = Products::find()
+                ->where('name=:nm',[':nm'=>$record->product_name])
+                ->one();
+
+            $prdtCustMapp = Price::find()
+                ->where('customer_id=:cid',[':cid'=>$challan->customer_id])
+                ->andWhere('customer_name=:nm',[':nm'=>$customer->name])
+                ->andWhere('product_name=:pnm',[':pnm'=>$product->name])
+                ->one();
+
+            if(isset($prdtCustMapp)){
+                //Update the record
+                $prdtCustMapp->price = $record->selling_price;
+                $prdtCustMapp->modified_at = date('Y-m-d H:i:s');
+                $prdtCustMapp->referred_challan_no = $challan_number;
+                $prdtCustMapp->save();
+            } else {
+                //Add new record
+                $prdtCustMapp = new Price();
+                $prdtCustMapp->customer_id = $challan->customer_id;
+                $prdtCustMapp->customer_name = $customer->name;
+                $prdtCustMapp->product_name = $product->name;
+                $prdtCustMapp->price = $record->selling_price;
+                $prdtCustMapp->referred_challan_no = $challan_number;
+                $prdtCustMapp->modified_at = date('Y-m-d H:i:s');
+                $prdtCustMapp->save();
+            }
         }
     }
 }
