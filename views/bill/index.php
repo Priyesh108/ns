@@ -42,6 +42,16 @@ $this->title = 'Bills';
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Action',
                     'contentOptions' => ['style' => 'min-width:70px;'],
+                    'template' => '{view} {update} {delete}',
+                    'buttons' => [
+                        'delete' => function($url, $model){
+                            $message = "Are you sure you want to delete this Bill?".PHP_EOL."Note: Only the bill will be deleted, associated challans are not going to be deleted.";
+                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+                                'data-confirm' => Yii::t('app', $message),
+                                'data-method' => 'post'
+                            ]);
+                        }
+                    ]
                 ],
                 [
                     'class' => 'yii\grid\ActionColumn',

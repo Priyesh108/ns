@@ -19,19 +19,21 @@ $this->title = "Challan Number: ".$model->challan_number;
                         <div class="col-xs-3">
                             <h3>Challan Details</h3>
                         </div>
-                        <div class="col-xs-2 col-xs-offset-5" style="margin-top: 15px">
-                            <?= Html::a('Update', ['update', 'id' => $model->c_id], ['class' => 'btn btn-primary']) ?>
-                            <?= Html::a('Delete', ['delete', 'id' => $model->c_id], [
-                                'class' => 'btn btn-danger',
-                                'data' => [
-                                    'confirm' => 'Are you sure you want to delete this item?',
-                                    'method' => 'post',
-                                ],
-                            ]) ?>
-                        </div>
-                        <div class="col-xs-2">
-                            <button type="button" style="margin-right: 30px;margin-top: 15px;" class="btn btn-success pull-right" onclick="createBill()">Create Bill</button>
-                        </div>
+                        <?php if($model->is_billed == 0) { ?>
+                            <div class="col-xs-2 col-xs-offset-5" style="margin-top: 15px">
+                                <?= Html::a('Update', ['update', 'id' => $model->c_id], ['class' => 'btn btn-primary']) ?>
+                                <?= Html::a('Delete', ['delete', 'id' => $model->c_id], [
+                                    'class' => 'btn btn-danger',
+                                    'data' => [
+                                        'confirm' => 'Are you sure you want to delete this item?',
+                                        'method' => 'post',
+                                    ],
+                                ]) ?>
+                            </div>
+                            <div class="col-xs-2">
+                                <button type="button" style="margin-right: 30px;margin-top: 15px;" class="btn btn-success pull-right" onclick="createBill()">Create Bill</button>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="box-body">

@@ -36,6 +36,16 @@ $this->title = 'Challans';
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Action',
                     'contentOptions' => ['style' => 'min-width:70px;'],
+                    'template' => '{view} {update} {delete}',
+                    'buttons' => [
+                        'update' => function($url, $model){
+                            if($model->is_billed == 0){
+                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url);
+                            } else {
+                                return false;
+                            }
+                        }
+                    ]
                 ],
                 'challan_number',
                 'customer_id',
