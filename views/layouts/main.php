@@ -11,6 +11,17 @@ use app\assets\AppAsset;
 
 AppAsset::register($this);
 ?>
+<?php
+$enable_disable_module = (new Yii\db\Query())
+    ->select('*')
+    ->from('module')
+    ->all();
+
+$module_check = array();
+foreach ($enable_disable_module as $item){
+    $module_check[$item['name']] = $item['active'];
+}
+?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -34,6 +45,7 @@ AppAsset::register($this);
     <link rel="stylesheet" href="<?php echo Yii::getAlias('@web') ?>/css/skin-blue.css">
     <!--Select2 css for search box in dropdownlist-->
     <link rel="stylesheet" href="<?php echo Yii::getAlias('@web') ?>/css/select2.min.css">
+    <link rel="stylesheet" href="<?php echo Yii::getAlias('@web') ?>/css/custom-made.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -245,31 +257,41 @@ AppAsset::register($this);
                         <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                     </a>
                 </li>
-                <li>
-                    <a href="<?php echo Yii::$app->urlManager->createUrl(['product/index']) ?>">
-                        <i class="fa fa-dashboard"></i> <span>Products</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?php echo Yii::$app->urlManager->createUrl(['customer/index']) ?>">
-                        <i class="fa fa-dashboard"></i> <span>Customers</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?php echo Yii::$app->urlManager->createUrl(['price/index']) ?>">
-                        <i class="fa fa-dashboard"></i> <span>Price</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?php echo Yii::$app->urlManager->createUrl(['challan/index']) ?>">
-                        <i class="fa fa-dashboard"></i> <span>Challans</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="<?php echo Yii::$app->urlManager->createUrl(['bill/index']) ?>">
-                        <i class="fa fa-dashboard"></i> <span>Bills</span>
-                    </a>
-                </li>
+                <?php if($module_check['Products'] == 1) { ?>
+                    <li>
+                        <a href="<?php echo Yii::$app->urlManager->createUrl(['product/index']) ?>">
+                            <i class="fa fa-dashboard"></i> <span>Products</span>
+                        </a>
+                    </li>
+                <?php } ?>
+                <?php if($module_check['Customers'] == 1) { ?>
+                    <li>
+                        <a href="<?php echo Yii::$app->urlManager->createUrl(['customer/index']) ?>">
+                            <i class="fa fa-dashboard"></i> <span>Customers</span>
+                        </a>
+                    </li>
+                <?php } ?>
+                <?php if($module_check['Price'] == 1) { ?>
+                    <li>
+                        <a href="<?php echo Yii::$app->urlManager->createUrl(['price/index']) ?>">
+                            <i class="fa fa-dashboard"></i> <span>Price</span>
+                        </a>
+                    </li>
+                <?php } ?>
+                <?php if($module_check['Challans'] == 1) { ?>
+                    <li>
+                        <a href="<?php echo Yii::$app->urlManager->createUrl(['challan/index']) ?>">
+                            <i class="fa fa-dashboard"></i> <span>Challans</span>
+                        </a>
+                    </li>
+                <?php } ?>
+                <?php if($module_check['Bills'] == 1) { ?>
+                    <li>
+                        <a href="<?php echo Yii::$app->urlManager->createUrl(['bill/index']) ?>">
+                            <i class="fa fa-dashboard"></i> <span>Bills</span>
+                        </a>
+                    </li>
+                <?php } ?>
             </ul>
         </section>
         <!-- /.sidebar -->

@@ -67,7 +67,12 @@ $this->title = "Bill Number: ".$model->bill_no;
         <!-- /.col -->
         <div class="col-sm-4 invoice-col">
             <b>Bill: </b> #<?= $model->bill_no; ?><br>
-            <b>Challan Number: </b><?= implode(', ', $challan_numbers); ?><br><br>
+            <b>Challan Number: </b><?/*= implode(', ', $challan_numbers); */?>
+            <?php foreach ($challan_records as $i=>$challan) { ?>
+                <?= Html::a($challan->challan_number,Yii::$app->urlManager->createUrl('challan').'/'.$challan->c_id); ?>
+                <?php if($i != sizeof($challan_records) - 1) echo ", ";?>
+            <?php } ?>
+            <br><br>
             <b>Billing Date: </b> <?= date('d-M-Y', strtotime($model->billing_date)) ;?><br>
             <b>Payment Due: </b> <?= date('d-M-Y', strtotime("+3 months", strtotime($model->billing_date))) ;?> <br>
             <!--<b>Description: </b> --><?/*= $model->description; */?>
@@ -113,7 +118,15 @@ $this->title = "Bill Number: ".$model->bill_no;
                         <td>Bank Of India</td>
                     </tr>
                     <tr>
+                        <th>Branch:</th>
+                        <td>Station Road</td>
+                    </tr>
+                    <tr>
                         <th>Account Number:</th>
+                        <td>1024245253434</td>
+                    </tr>
+                    <tr>
+                        <th>IFSC Code:</th>
                         <td>1024245253434</td>
                     </tr>
                 </table>

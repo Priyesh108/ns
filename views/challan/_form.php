@@ -232,6 +232,7 @@ use yii\widgets\ActiveForm;
 
     <div class="form-group">
         <?= Html::submitButton('Save Challan', ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Cancel',Yii::$app->urlManager->createUrl('challan/index'),['class'=>'btn btn-default pull-right']); ?>
     </div>
     <?php ActiveForm::end(); ?>
 
@@ -490,5 +491,5 @@ use yii\widgets\ActiveForm;
                 }
             });
         }
-    })
+    });
 </script>

@@ -58,6 +58,7 @@ class ChallanController extends Controller
         $searchModel = new ChallansSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $this->deletePendingChallans();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

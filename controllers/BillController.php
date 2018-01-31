@@ -156,6 +156,9 @@ class BillController extends Controller
             array_push($challan_numbers,$challan);
 
         }
+        $challan_records = Challans::find()
+            ->where(['in','challan_number',$challan_numbers])
+            ->all();
 
         $productGroups = (new Yii\db\Query())
             ->select('*')
@@ -166,7 +169,7 @@ class BillController extends Controller
         return $this->render('view', [
             'model' => $bill,
             'productGroups' => $productGroups,
-            'challan_numbers' => $challan_numbers
+            'challan_records' => $challan_records
         ]);
     }
 
@@ -175,7 +178,7 @@ class BillController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    /*public function actionCreate()
     {
         $model = new Bill();
 
@@ -186,7 +189,7 @@ class BillController extends Controller
                 'model' => $model,
             ]);
         }
-    }
+    }*/
 
     /**
      * Updates an existing Bill model.
@@ -235,6 +238,29 @@ class BillController extends Controller
      */
     public function actionDelete($id)
     {
+        $bill = Bill::findOne($id);
+
+        $challan_records = BillChallanMapping::find()
+            ->where('bill_no=:bn',['bn'=>$bill->bill_no])
+            ->all();
+
+        $challan_number = array();
+        foreach ($challan_records as $record){
+            array_push($challan_number, $record->challan_number);
+        }
+
+        //Update challan status
+        $condition = ['in','challan_number',$challan_number];
+        Challans::updateAll([
+            'is_merged' => 0,
+            'is_billed' => 0,
+            'status' => 1
+        ],$condition);
+
+        //Delete in bill Challan mapping
+        BillChallanMapping::deleteAll('bill_no=:bn',[':bn'=>$bill->bill_no]);
+
+        //Delete the bill
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
